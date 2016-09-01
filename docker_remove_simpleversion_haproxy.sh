@@ -1,0 +1,1 @@
+docker rmi simpleversion_haproxy
