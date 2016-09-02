@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+    haproxy:
+        build:
+            context: ./haproxy
+            args:
+                - version=${HA_VERSION}
+        links: 
+            - node1:node1
+            - node2:node2
+        ports: 
+            - "80:80"
+    node1:
+        image: jboss/wildfly:${WF_VERSION}
+    node2:
+        image: jboss/wildfly:${WF_VERSION}

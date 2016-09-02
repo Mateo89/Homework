@@ -1,0 +1,4 @@
+FROM jboss/wildfly:9.0.2.Final
+
+EXPOSE 8080
+EXPOSE 9990
