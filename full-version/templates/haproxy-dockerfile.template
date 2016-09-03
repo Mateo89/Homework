@@ -1,6 +1,16 @@
-ARG version
-
-FROM haproxy:"$version"
+source config.cfg
+echo -n "FROM haproxy:${HA_VERSION}
 
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+"
+if [ $HA_SSL == "TAK" ]; then
+echo -n "
+COPY cert.pem /usr/local/etc/haproxy/cert.pem
+EXPOSE 80 443
+"
+else
+echo -n "
 EXPOSE 80
+"
+fi
+

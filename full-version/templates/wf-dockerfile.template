@@ -1,4 +1,4 @@
-FROM jboss/wildfly:9.0.2.Final
+FROM jboss/wildfly:${WF_VERSION}
 
 EXPOSE 8080
 EXPOSE 9990

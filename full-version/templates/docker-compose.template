@@ -1,17 +1,37 @@
-version: '2'
+#!/bin/bash
+source config.cfg
 
+echo -n "
+version: '2'
 services:
     haproxy:
         build:
             context: ./haproxy
-            args:
-                - version=${HA_VERSION}
         links: 
             - node1:node1
             - node2:node2
-        ports: 
-            - "80:80"
+        ports:
+            - \"80:80\""
+if [ $HA_SSL == "TAK" ]; then
+    echo -n "
+            - \"443:443\""
+fi
+
+if [ $WF_BUILD_METHOD == "IMAGE" ]; then
+echo -n " 
     node1:
         image: jboss/wildfly:${WF_VERSION}
     node2:
         image: jboss/wildfly:${WF_VERSION}
+"
+fi
+if [ $WF_BUILD_METHOD == "DOCKERFILE" ]; then
+echo -n "
+    node1:
+        build:
+            context: ./wildfly
+    node2:
+        build:
+            context: ./wildfly
+"
+fi

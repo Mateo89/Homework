@@ -30,7 +30,8 @@ echo ""
 echo "RENDERUJĘ:"
 
 echo -ne "\tDOCKER-COMPOSE ... \t\t"
-render_template templates/docker-compose.template > build/docker-compose.yml
+./templates/docker-compose.template > build/docker-compose.yml
+#render_template templates/docker-compose.template > build/docker-compose.yml
 echo -e "[ \e[0;32m OK \e[0m ]"
 
 #sekcja HAPROXY
@@ -40,15 +41,38 @@ echo -ne "\t  DOCKERFILE ... "
 if [ ! -d build/haproxy ]; then
     mkdir -p build/haproxy
 fi
-#render_template templates/haproxy-dockerfile.template > build/haproxy/Dockerfile
-cat templates/haproxy-dockerfile.template > build/haproxy/Dockerfile
+./templates/haproxy-dockerfile.template > build/haproxy/Dockerfile
 echo -e "\t\t[ \e[0;32m OK \e[0m ]"
 
 
 echo -ne "\t  HAPROXY.CFG ... "
-render_template templates/haproxy-cfg.template > build/haproxy/haproxy.cfg
+./templates/haproxy-cfg.template > build/haproxy/haproxy.cfg
 echo -e "\t\t[ \e[0;32m OK \e[0m ]"
 
+if [ $HA_SSL == "TAK" ]; then
+echo -ne "\t  CERT.PEM ...   "
+cat templates/haproxy-cert.template > build/haproxy/cert.pem
+echo -e "\t\t[ \e[0;32m OK \e[0m ]"
+fi
 
 echo ""
+
+#sekcja WILDFLY
+
+if [ $WF_BUILD_METHOD == "DOCKERFILE" ]; then
+
+    echo -e "\tWILDFLY:"
+
+    if [ ! -d build/wildfly  ]; then
+        mkdir -p build/wildfly
+    fi
+
+    echo -ne "\t  DOCKERFILE ... "
+    render_template templates/wf-dockerfile.template > build/wildfly/Dockerfile
+    echo -e "\t\t[ \e[0;32m OK \e[0m ]"
+
+    echo ""
+
+fi
+
 
